@@ -3,446 +3,233 @@ title: Frontend Client
 description: Generate browser-compatible clients for OpenAPI servers
 ---
 
-# Frontend Client
-
-Create implementation and type files that expose a client for a remote OpenAPI server, using `fetch` and compatible with any browser.
+Create implementation and type files that expose a client for a remote OpenAPI server, that uses `fetch` and can run in any browser.
 
 ## Generating the Client
 
-To create a browser-compatible client for an OpenAPI API:
+To create a client for a remote OpenAPI API, use the following command:
 
 ```bash
-npx @platformatic/massimo-cli http://example.com/openapi.json \
-  --frontend \
-  --language <language> \
-  --name <clientname>
+npx @platformatic/massimo-cli http://example.com/openapi.json --frontend --language <language> --name <clientname>
 ```
 
-- `<language>`: Either `js` (JavaScript) or `ts` (TypeScript)
-- `<clientname>`: Name of generated files (default: `api`)
+- `<language>`: Can be either `js` (JavaScript) or `ts` (TypeScript).
+- `<clientname>`: The name of the generated client files. Defaults to `api`.
 
-This creates two files:
-- `clientname.js` (or `.ts`) - Client implementation
-- `clientname-types.d.ts` - TypeScript definitions
+This command creates two files: `clientname.js` (or `clientname.ts`) and `clientname-types.d.ts` for TypeScript types.
 
-## Usage Patterns
+## Usage
 
-The frontend client provides two usage patterns:
+The general implementation exports named operations and a factory object.
 
-### 1. Named Operations
-
-Import and use individual operations:
+### Named operations
 
 ```js
-import { setBaseUrl, getMovies, createMovie } from './api.js'
+import { setBaseUrl, getMovies } from "./api.js";
 
-// Set the base URL globally
-setBaseUrl('http://my-server-url.com')
+setBaseUrl("http://my-server-url.com"); // modifies the global `baseUrl` variable
 
-// Use the operations
-const movies = await getMovies({ limit: 10 })
-console.log(movies)
-
-const newMovie = await createMovie({
-  title: 'The Matrix',
-  year: 1999
-})
+const movies = await getMovies({});
+console.log(movies);
 ```
 
-### 2. Factory Pattern
+### Factory
 
-Create a client instance with its own configuration:
+The factory object is called `build` and can be used as follows:
 
 ```js
-import build from './api.js'
+import build from "./api.js";
 
-// Create a client instance
-const client = build('http://my-server-url.com')
+const client = build("http://my-server-url.com");
 
-// Use the client
-const movies = await client.getMovies({ limit: 10 })
-const newMovie = await client.createMovie({
-  title: 'The Matrix',
-  year: 1999
-})
+const movies = await client.getMovies({});
+console.log(movies);
 ```
 
-You can use both patterns in the same application - they operate independently.
+You can use both named operations and the factory in the same file. They can work on different hosts, so the factory does _not_ use the global `setBaseUrl` function.
 
-## Configuration
+### Default fetch params
 
-### Setting Default Headers
-
-Configure headers for all requests:
+You can set additional parameters to be passed to the client `fetch` instance.
 
 ```js
-import { setDefaultHeaders, getMovies } from './api.js'
-
-// Set headers globally
-setDefaultHeaders({
-  'Authorization': 'Bearer MY_TOKEN',
-  'X-API-Key': 'my-api-key'
-})
-
-// All requests will include these headers
-const movies = await getMovies({})
-```
-
-With the factory pattern:
-
-```js
-import build from './api.js'
-
-const client = build('http://my-server-url.com', {
-  headers: {
-    'Authorization': 'Bearer MY_TOKEN',
-    'X-API-Key': 'my-api-key'
-  }
-})
-```
-
-### Fetch Parameters
-
-Customize the underlying `fetch` behavior:
-
-```js
-import { setDefaultFetchParams, getMovies } from './api.js'
+import build from "./api.js";
+import { setDefaultFetchParams } from "./api.js";
 
 setDefaultFetchParams({
   keepalive: false,
-  mode: 'cors',
-  credentials: 'include',
-  cache: 'no-cache'
-})
+  mode: "no-cors",
+});
 
-// These parameters will be passed to fetch()
-const movies = await getMovies({})
+// `fetch` will be called with the `keepalive` and `mode` method as defined above
+const movies = await getMovies({});
+console.log(movies);
 ```
 
-## TypeScript Support
+### Default Headers
 
-### Type Definitions
+You can set headers that will be sent along with all the requests made by the client. This is useful, for instance, for authentication.
 
-The generated type file includes:
+```js
+import build from "./api.js";
+import { setBaseUrl, getMovies } from "./api.js";
 
-```typescript
-// Request/Response types for each operation
+setBaseUrl("http://my-server-url.com"); // modifies the global `baseUrl` variable
+
+setDefaultHeaders({
+  authorization: "Bearer MY_TOKEN",
+});
+
+const movies = await getMovies({});
+console.log(movies);
+```
+
+With the factory approach you'll set up `headers` as option in the `build` method
+
+```js
+import build from "./api.js";
+
+const client = build("http://my-server-url.com", {
+  headers: {
+    authorization: "Bearer MY_TOKEN",
+  },
+});
+
+const movies = await client.getMovies({});
+console.log(movies);
+```
+
+## Generated Code
+
+### TypeScript Types
+
+The type file will look like this:
+
+```ts
 export interface GetMoviesRequest {
   limit?: number;
   offset?: number;
-  genre?: string;
+  // ... all other options
 }
 
-export interface GetMoviesResponseOK {
+interface GetMoviesResponseOK {
   id: number;
   title: string;
-  year: number;
 }
-
-// API interface with all operations
 export interface Api {
   setBaseUrl(newUrl: string): void;
   setDefaultHeaders(headers: Object): void;
   setDefaultFetchParams(fetchParams: RequestInit): void;
   getMovies(req: GetMoviesRequest): Promise<Array<GetMoviesResponseOK>>;
-  createMovie(req: CreateMovieRequest): Promise<CreateMovieResponse>;
-  // ... other operations
+  // ... all operations listed here
 }
 
-// Factory function type
-type PlatformaticFrontendClient = Omit<Api, 'setBaseUrl'>
-export default function build(url: string): PlatformaticFrontendClient
+type PlatformaticFrontendClient = Omit<Api, "setBaseUrl">;
+export default function build(url: string): PlatformaticFrontendClient;
 ```
 
-### Using with TypeScript
+### JavaScript Implementation
 
-```typescript
-import build from './api'
-import type { GetMoviesRequest, Movie } from './api-types'
+The _javascript_ implementation will look like this
 
-const client = build('http://api.example.com')
+```js
+let baseUrl = "";
+let defaultHeaders = "";
+/**  @type {import('./api-types.d.ts').Api['setBaseUrl']} */
+export const setBaseUrl = (newUrl) => {
+  baseUrl = newUrl;
+};
 
-const request: GetMoviesRequest = {
-  limit: 10,
-  genre: 'action'
+/**  @type {import('./api-types.d.ts').Api['setDefaultHeaders']} */
+export const setDefaultHeaders = (headers) => {
+  defaultHeaders = headers;
+};
+
+/**  @type {import('./${name}-types.d.ts').${camelCaseName}['setDefaultFetchParams']} */
+export const setDefaultFetchParams = (fetchParams) => {
+  defaultFetchParams = fetchParams;
+};
+
+/**  @type {import('./api-types.d.ts').Api['getMovies']} */
+export const getMovies = async (request) => {
+  return await _getMovies(baseUrl, request);
+};
+async function _createMovie(url, request) {
+  const response = await fetch(`${url}/movies/`, {
+    method: "post",
+    body: JSON.stringify(request),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error(await response.text());
+  }
+
+  return await response.json();
 }
 
-const movies: Movie[] = await client.getMovies(request)
-```
+/**  @type {import('./api-types.d.ts').Api['createMovie']} */
+export const createMovie = async (request) => {
+  return await _createMovie(baseUrl, request);
+};
+// ...
 
-## Real-World Examples
-
-### React Integration
-
-```jsx
-import { useState, useEffect } from 'react'
-import build from './api'
-
-const apiClient = build(process.env.REACT_APP_API_URL)
-
-function MovieList() {
-  const [movies, setMovies] = useState([])
-  const [loading, setLoading] = useState(true)
-
-  useEffect(() => {
-    async function fetchMovies() {
-      try {
-        const data = await apiClient.getMovies({ limit: 20 })
-        setMovies(data)
-      } catch (error) {
-        console.error('Failed to fetch movies:', error)
-      } finally {
-        setLoading(false)
-      }
-    }
-    
-    fetchMovies()
-  }, [])
-
-  if (loading) return <div>Loading...</div>
-  
-  return (
-    <ul>
-      {movies.map(movie => (
-        <li key={movie.id}>{movie.title}</li>
-      ))}
-    </ul>
-  )
+export default function build(url) {
+  return {
+    getMovies: _getMovies.bind(url, ...arguments),
+    // ...
+  };
 }
 ```
 
-### Vue.js Integration
+### TypeScript Implementation
 
-```vue
-<template>
-  <div>
-    <ul v-if="!loading">
-      <li v-for="movie in movies" :key="movie.id">
-        {{ movie.title }}
-      </li>
-    </ul>
-    <div v-else>Loading...</div>
-  </div>
-</template>
+The _typescript_ implementation will look like this:
 
-<script setup>
-import { ref, onMounted } from 'vue'
-import build from './api'
+```ts
+import type { Api } from "./api-types";
+import type * as Types from "./api-types";
 
-const client = build(import.meta.env.VITE_API_URL)
-const movies = ref([])
-const loading = ref(true)
+let baseUrl = "";
+let defaultHeaders = {};
+let defaultFetchParams = {};
 
-onMounted(async () => {
-  try {
-    movies.value = await client.getMovies({ limit: 20 })
-  } finally {
-    loading.value = false
-  }
-})
-</script>
-```
+export const setBaseUrl = (newUrl: string): void => {
+  baseUrl = newUrl;
+};
 
-### Authentication Flow
+export const setDefaultHeaders = (headers: Object) => {
+  defaultHeaders = headers;
+};
 
-```js
-import build from './api'
+export const setDefaultFetchParams = (fetchParams: RequestInit): void => {
+  defaultFetchParams = fetchParams;
+};
 
-class ApiService {
-  constructor() {
-    this.client = build(process.env.API_URL)
-    this.token = localStorage.getItem('authToken')
-    
-    if (this.token) {
-      this.setAuthToken(this.token)
-    }
+const _getMovies = async (url: string, request: Types.GetMoviesRequest) => {
+  const response = await fetch(
+    `${url}/movies/?${new URLSearchParams(Object.entries(request || {})).toString()}`,
+  );
+
+  if (!response.ok) {
+    throw new Error(await response.text());
   }
 
-  setAuthToken(token) {
-    this.token = token
-    this.client = build(process.env.API_URL, {
-      headers: {
-        'Authorization': `Bearer ${token}`
-      }
-    })
-    localStorage.setItem('authToken', token)
-  }
+  return await response.json();
+};
 
-  async login(credentials) {
-    const response = await this.client.login(credentials)
-    this.setAuthToken(response.token)
-    return response
-  }
-
-  async logout() {
-    await this.client.logout()
-    this.token = null
-    localStorage.removeItem('authToken')
-    this.client = build(process.env.API_URL)
-  }
-
-  // Proxy methods to client
-  getMovies(params) {
-    return this.client.getMovies(params)
-  }
+export const getMovies: Api["getMovies"] = async (
+  request: Types.GetMoviesRequest,
+) => {
+  return await _getMovies(baseUrl, request);
+};
+// ...
+export default function build(url) {
+  return {
+    getMovies: _getMovies.bind(url, ...arguments),
+    // ...
+  };
 }
-
-export default new ApiService()
-```
-
-## Error Handling
-
-The client throws errors for failed requests:
-
-```js
-import { getMovies } from './api'
-
-try {
-  const movies = await getMovies({ limit: 10 })
-} catch (error) {
-  if (error.message.includes('401')) {
-    // Handle unauthorized
-    console.error('Authentication required')
-  } else if (error.message.includes('404')) {
-    // Handle not found
-    console.error('Resource not found')
-  } else {
-    // Handle other errors
-    console.error('Request failed:', error)
-  }
-}
-```
-
-## File Upload Support
-
-For multipart/form-data requests:
-
-```js
-const formData = new FormData()
-formData.append('file', fileInput.files[0])
-formData.append('title', 'My Document')
-
-const response = await client.uploadFile(formData)
-```
-
-## Request Interceptors
-
-Add request/response interceptors:
-
-```js
-import build from './api'
-
-const client = build('http://api.example.com')
-
-// Wrap client methods to add interceptors
-const interceptedClient = new Proxy(client, {
-  get(target, prop) {
-    const original = target[prop]
-    
-    if (typeof original === 'function') {
-      return async function(...args) {
-        // Before request
-        console.log(`Calling ${prop} with:`, args)
-        
-        try {
-          // Make request
-          const result = await original.apply(target, args)
-          
-          // After successful response
-          console.log(`${prop} succeeded:`, result)
-          
-          return result
-        } catch (error) {
-          // Handle errors
-          console.error(`${prop} failed:`, error)
-          throw error
-        }
-      }
-    }
-    
-    return original
-  }
-})
-```
-
-## Performance Optimization
-
-### Request Caching
-
-```js
-class CachedApiClient {
-  constructor(baseUrl) {
-    this.client = build(baseUrl)
-    this.cache = new Map()
-  }
-
-  async getMovies(params) {
-    const key = JSON.stringify(params)
-    
-    if (this.cache.has(key)) {
-      return this.cache.get(key)
-    }
-    
-    const data = await this.client.getMovies(params)
-    this.cache.set(key, data)
-    
-    // Clear cache after 5 minutes
-    setTimeout(() => this.cache.delete(key), 5 * 60 * 1000)
-    
-    return data
-  }
-}
-```
-
-### Request Debouncing
-
-```js
-function debounce(func, wait) {
-  let timeout
-  return function executedFunction(...args) {
-    const later = () => {
-      clearTimeout(timeout)
-      func(...args)
-    }
-    clearTimeout(timeout)
-    timeout = setTimeout(later, wait)
-  }
-}
-
-// Usage in search
-const searchMovies = debounce(async (query) => {
-  const results = await client.searchMovies({ q: query })
-  displayResults(results)
-}, 300)
-```
-
-## Browser Compatibility
-
-The generated client uses standard `fetch` API and works in:
-- Chrome 42+
-- Firefox 39+
-- Safari 10.1+
-- Edge 14+
-
-For older browsers, include a fetch polyfill:
-
-```html
-<script src="https://polyfill.io/v3/polyfill.min.js?features=fetch"></script>
-```
-
-## Bundle Size Optimization
-
-The frontend client is designed to be lightweight:
-- No external dependencies
-- Tree-shakeable when using named exports
-- Typically < 10KB minified
-
-For optimal bundle size with webpack/rollup:
-
-```js
-// Only import what you need
-import { getMovies, createMovie } from './api'
-
-// Instead of
-import * as api from './api'
 ```
