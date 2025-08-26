@@ -2,7 +2,7 @@
 
 [![Built with Starlight](https://astro.badg.es/v2/built-with-starlight/tiny.svg)](https://starlight.astro.build)
 
-The `main` branch is published on https://massimo-docs.pages.dev/
+The `main` branch is published on https://massimo.stageplt.space
 
 ```
 npm create astro@latest -- --template starlight
