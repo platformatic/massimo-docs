@@ -1,0 +1,65 @@
+---
+title: Welcome to Massimo
+description: Generate typed HTTP clients for your OpenAPI and GraphQL APIs
+template: splash
+hero:
+  tagline: Create typed HTTP clients for OpenAPI and GraphQL APIs with automatic type generation and seamless integration with JavaScript and TypeScript frameworks.
+  actions:
+    - text: Get Started
+      link: /getting-started/
+      icon: right-arrow
+      variant: primary
+    - text: View on GitHub
+      link: https://github.com/platformatic/massimo
+      icon: external
+---
+
+import { Card, CardGrid } from '@astrojs/starlight/components';
+
+## Why Massimo?
+
+<CardGrid stagger>
+	<Card title="Type-Safe Clients" icon="check-circle">
+		Automatically generate TypeScript types from your OpenAPI or GraphQL schemas for complete type safety in your applications.
+	</Card>
+	<Card title="Framework Agnostic" icon="puzzle">
+		Works seamlessly with any JavaScript framework - Node.js, React, Vue, Angular, and more. Use in both server and browser environments.
+	</Card>
+	<Card title="Developer Experience" icon="rocket">
+		Simple CLI commands to generate clients, with support for custom headers, authentication, and request/response interceptors.
+	</Card>
+	<Card title="Production Ready" icon="shield">
+		Battle-tested in production environments with built-in error handling, retry logic, and telemetry support.
+	</Card>
+</CardGrid>
+
+## Quick Start
+
+Generate a typed client for your API in seconds:
+
+```bash
+# For OpenAPI
+npx @platformatic/massimo-cli http://api.example.com/openapi.json --name my-client
+
+# For GraphQL  
+npx @platformatic/massimo-cli http://api.example.com/graphql --name my-client --type graphql
+```
+
+Then use it in your code:
+
+```js
+import client from './my-client/my-client.js'
+
+const api = await client({ url: 'http://api.example.com' })
+const result = await api.getUsers()
+```
+
+## Features
+
+- **OpenAPI & GraphQL Support** - Generate clients from OpenAPI 3.0+ specs or GraphQL schemas
+- **TypeScript Types** - Full type safety with automatically generated TypeScript definitions
+- **Frontend & Backend** - Use the same client code in Node.js servers or browser applications  
+- **Authentication** - Built-in support for custom headers and authentication strategies
+- **Fastify Integration** - First-class Fastify plugin for seamless server integration
+- **Telemetry** - Automatic telemetry propagation for distributed tracing
+- **Error Handling** - Comprehensive error types and response validation
