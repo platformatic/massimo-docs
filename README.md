@@ -124,25 +124,6 @@ Custom styles are located in `src/styles/custom.css`. The documentation uses the
 
 Edit the `sidebar` configuration in `astro.config.mjs` to modify the navigation structure.
 
-## 🚢 Deployment
-
-The documentation can be deployed to any static hosting service:
-
-### GitHub Pages
-
-```bash
-npm run build
-# Deploy the dist/ folder to GitHub Pages
-```
-
-### Netlify
-
-[![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy)
-
-### Vercel
-
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new)
-
 ## 🔗 Links
 
 - [Massimo Repository](https://github.com/platformatic/massimo)
