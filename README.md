@@ -1,37 +1,105 @@
-# Starlight Starter Kit: Basics
+# Massimo Documentation
+
+Official documentation for Massimo - a powerful tool for generating typed HTTP clients from OpenAPI and GraphQL APIs.
 
 [![Built with Starlight](https://astro.badg.es/v2/built-with-starlight/tiny.svg)](https://starlight.astro.build)
 
 The `main` branch is published on https://massimo.stageplt.space
 
+## 🚀 Quick Start
+
+### Prerequisites
+
+- Node.js 18+ installed
+- npm or pnpm package manager
+
+### Development
+
+```bash
+# Install dependencies
+npm install
+
+# Start development server
+npm run dev
+
+# Build for production
+npm run build
+
+# Preview production build
+npm run preview
 ```
-npm create astro@latest -- --template starlight
-```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+The development server will start at `http://localhost:4321`.
 
-## 🚀 Project Structure
-
-Inside of your Astro + Starlight project, you'll see the following folders and files:
+## 📁 Project Structure
 
 ```
-.
-├── public/
+massimo-docs/
 ├── src/
-│   ├── assets/
+│   ├── assets/           # Images and logos
 │   ├── content/
-│   │   └── docs/
-│   └── content.config.ts
-├── astro.config.mjs
+│   │   └── docs/        # Documentation markdown files
+│   │       ├── index.mdx            # Homepage
+│   │       ├── getting-started.md   # Getting started guide
+│   │       └── reference/           # API reference docs
+│   │           ├── overview.md      # CLI reference
+│   │           ├── frontend.md      # Frontend client docs
+│   │           ├── programmatic.md  # Programmatic API
+│   │           └── errors.md        # Error reference
+│   └── styles/          # Custom CSS styles
+├── astro.config.mjs     # Astro configuration
 ├── package.json
-└── tsconfig.json
+└── README.md
 ```
 
-Starlight looks for `.md` or `.mdx` files in the `src/content/docs/` directory. Each file is exposed as a route based on its file name.
+## 📝 Contributing to Documentation
 
-Images can be added to `src/assets/` and embedded in Markdown with a relative link.
+### Adding New Pages
 
-Static assets, like favicons, can be placed in the `public/` directory.
+1. Create a new `.md` or `.mdx` file in `src/content/docs/`
+2. Add frontmatter with title and description:
+
+```markdown
+---
+title: Your Page Title
+description: Brief description of the page
+---
+
+# Your content here
+```
+
+3. Update the sidebar in `astro.config.mjs` if needed
+
+### Writing Guidelines
+
+- Use clear, concise language
+- Include code examples for all features
+- Provide both JavaScript and TypeScript examples where applicable
+- Test all code examples before committing
+- Use proper markdown formatting and headers
+
+### Code Examples
+
+When adding code examples:
+
+````markdown
+```js
+// JavaScript example
+import client from './api.js'
+
+const api = await client({ url: 'https://api.example.com' })
+const users = await api.getUsers()
+```
+
+```typescript
+// TypeScript example
+import client from './api'
+import type { User } from './api-types'
+
+const api = await client({ url: 'https://api.example.com' })
+const users: User[] = await api.getUsers()
+```
+````
 
 ## 🧞 Commands
 
@@ -46,6 +114,50 @@ All commands are run from the root of the project, from a terminal:
 | `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
 | `npm run astro -- --help` | Get help using the Astro CLI                     |
 
-## 👀 Want to learn more?
+## 🎨 Customization
 
-Check out [Starlight’s docs](https://starlight.astro.build/), read [the Astro documentation](https://docs.astro.build), or jump into the [Astro Discord server](https://astro.build/chat).
+### Styling
+
+Custom styles are located in `src/styles/custom.css`. The documentation uses the Platformatic brand colors and fonts.
+
+### Navigation
+
+Edit the `sidebar` configuration in `astro.config.mjs` to modify the navigation structure.
+
+## 🚢 Deployment
+
+The documentation can be deployed to any static hosting service:
+
+### GitHub Pages
+
+```bash
+npm run build
+# Deploy the dist/ folder to GitHub Pages
+```
+
+### Netlify
+
+[![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy)
+
+### Vercel
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new)
+
+## 🔗 Links
+
+- [Massimo Repository](https://github.com/platformatic/massimo)
+- [Platformatic Website](https://platformatic.dev)
+- [Discord Community](https://discord.com/invite/platformatic)
+
+## 📄 License
+
+This documentation is part of the Massimo project and follows the same license terms.
+
+## 🤝 Support
+
+- [GitHub Issues](https://github.com/platformatic/massimo/issues)
+- [Discord](https://discord.com/invite/platformatic)
+
+---
+
+Built with [Astro](https://astro.build) and [Starlight](https://starlight.astro.build/)
