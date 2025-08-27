@@ -4,7 +4,7 @@ Official documentation for Massimo - a powerful tool for generating typed HTTP c
 
 [![Built with Starlight](https://astro.badg.es/v2/built-with-starlight/tiny.svg)](https://starlight.astro.build)
 
-The `main` branch is published on https://massimo.stageplt.space
+The `main` branch is published on https://massimohttp.dev
 
 ## 🚀 Quick Start
 
