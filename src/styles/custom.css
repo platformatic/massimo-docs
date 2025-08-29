@@ -85,3 +85,23 @@
   color: #000;
   font-weight: 600;
 }
+
+/* Make logo bigger */
+.site-title img {
+  height: 3rem !important;
+  width: auto !important;
+  max-width: none !important;
+}
+
+/* Adjust logo container to accommodate bigger logo */
+.site-title {
+  display: flex;
+  align-items: center;
+}
+
+/* Mobile responsive logo size */
+@media (max-width: 768px) {
+  .site-title img {
+    height: 2.5rem !important;
+  }
+}
