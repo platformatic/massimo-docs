@@ -10,9 +10,9 @@ export default defineConfig({
       description:
         "Generate typed HTTP clients for your OpenAPI and GraphQL APIs",
       logo: {
-        light: "./src/assets/platformatic-logo-light.svg",
-        dark: "./src/assets/platformatic-logo-dark.svg",
-        alt: "Platformatic",
+        light: "./src/assets/massimo-logo-light.svg",
+        dark: "./src/assets/massimo-logo-dark.svg",
+        alt: "Massimo",
       },
       customCss: ["./src/styles/custom.css"],
       social: [
