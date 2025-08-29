@@ -33,6 +33,33 @@ import { Card, CardGrid } from '@astrojs/starlight/components';
 	</Card>
 </CardGrid>
 
+## Platform-Specific Clients
+
+Massimo generates optimized clients for different environments:
+
+<CardGrid stagger>
+	<Card title="Node.js Client" icon="seti:nodejs">
+		**Powered by Undici** - Uses the high-performance Undici HTTP client for optimal performance in Node.js environments. Features connection pooling, HTTP/2 support, and advanced request pipelining.
+	</Card>
+	<Card title="Web Client" icon="globe">
+		**Powered by Fetch** - Uses the native Fetch API for browser compatibility. Lightweight bundle size with full support for modern web standards and browser features.
+	</Card>
+</CardGrid>
+
+### Node.js Client Features
+- Built on **Undici** for maximum performance
+- Connection pooling and keep-alive
+- HTTP/2 and pipelining support
+- Stream processing for large responses
+- Native Node.js integration
+
+### Web Client Features  
+- Uses native **Fetch API**
+- Minimal bundle size
+- Browser-native error handling
+- CORS support
+- Works with all modern frameworks
+
 ## Quick Start
 
 Generate a typed client for your API in seconds:
@@ -58,7 +85,7 @@ const result = await api.getUsers()
 
 - **OpenAPI & GraphQL Support** - Generate clients from OpenAPI 3.0+ specs or GraphQL schemas
 - **TypeScript Types** - Full type safety with automatically generated TypeScript definitions
-- **Frontend & Backend** - Use the same client code in Node.js servers or browser applications  
+- **Dual Runtime Support** - Optimized clients for both Node.js (Undici) and browsers (Fetch)
 - **Authentication** - Built-in support for custom headers and authentication strategies
 - **Fastify Integration** - First-class Fastify plugin for seamless server integration
 - **Error Handling** - Comprehensive error types and response validation
