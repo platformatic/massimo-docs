@@ -15,6 +15,9 @@ export default defineConfig({
         alt: "Massimo",
       },
       customCss: ["./src/styles/custom.css"],
+      components: {
+        Footer: "./src/components/Footer.astro",
+      },
       social: [
         {
           icon: "github",
