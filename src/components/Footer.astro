@@ -1,0 +1,37 @@
+---
+---
+
+<footer class="custom-footer">
+  <div class="footer-content">
+    <p>Copyright &copy; {new Date().getFullYear()} Platformatic, Inc.</p>
+  </div>
+</footer>
+
+<style>
+  .custom-footer {
+    border-top: 1px solid var(--sl-color-gray-5);
+    padding: 2rem 1rem;
+    margin-top: 4rem;
+    text-align: center;
+    background: var(--sl-color-bg);
+  }
+
+  .footer-content {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .footer-content p {
+    color: var(--sl-color-gray-2);
+    margin: 0;
+    font-size: 0.875rem;
+  }
+
+  [data-theme="dark"] .custom-footer {
+    border-top-color: var(--sl-color-gray-6);
+  }
+
+  [data-theme="dark"] .footer-content p {
+    color: var(--sl-color-gray-3);
+  }
+</style>
