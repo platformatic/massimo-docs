@@ -10,7 +10,7 @@ Create implementation and type files that expose a client for a remote OpenAPI s
 To create a client for a remote OpenAPI API, use the following command:
 
 ```bash
-npx @platformatic/massimo-cli http://example.com/openapi.json --frontend --language <language> --name <clientname>
+npx massimo-cli http://example.com/openapi.json --frontend --language <language> --name <clientname>
 ```
 
 - `<language>`: Can be either `js` (JavaScript) or `ts` (TypeScript).

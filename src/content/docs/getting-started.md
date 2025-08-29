@@ -12,13 +12,13 @@ Massimo is a powerful tool for generating typed HTTP clients from OpenAPI and Gr
 You can use Massimo directly via npx without installation:
 
 ```bash
-npx @platformatic/massimo-cli [options]
+npx massimo-cli [options]
 ```
 
 Or install it globally:
 
 ```bash
-npm install -g @platformatic/massimo-cli
+npm install -g massimo-cli
 # Then use:
 massimo [options]
 ```
@@ -30,7 +30,7 @@ massimo [options]
 To create a client for an OpenAPI API:
 
 ```bash
-npx @platformatic/massimo-cli http://example.com/openapi.json --name myclient
+npx massimo-cli http://example.com/openapi.json --name myclient
 ```
 
 This command will:
@@ -44,7 +44,7 @@ This command will:
 For GraphQL APIs:
 
 ```bash
-npx @platformatic/massimo-cli http://example.com/graphql --name myclient --type graphql
+npx massimo-cli http://example.com/graphql --name myclient --type graphql
 ```
 
 ### Forcing Client Type
@@ -52,7 +52,7 @@ npx @platformatic/massimo-cli http://example.com/graphql --name myclient --type 
 If an API supports both OpenAPI and GraphQL, you can specify which client to generate:
 
 ```bash
-npx @platformatic/massimo-cli http://example.com/api --name myclient --type openapi
+npx massimo-cli http://example.com/api --name myclient --type openapi
 ```
 
 ### Example Usage in JavaScript (GraphQL)
