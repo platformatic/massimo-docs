@@ -5,7 +5,7 @@ description: Complete reference for the Massimo CLI commands and options
 
 # Massimo CLI Reference
 
-The Massimo CLI (`@platformatic/massimo-cli`) creates Fastify plugins that expose clients for remote OpenAPI or GraphQL APIs.
+The Massimo CLI (`massimo-cli`) creates Fastify plugins that expose clients for remote OpenAPI or GraphQL APIs.
 
 ## Basic Usage
 
