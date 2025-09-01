@@ -60,18 +60,18 @@ npx massimo-cli http://example.com/api --name myclient --type openapi
 Use the client in your JavaScript application, by calling a GraphQL endpoint:
 
 ```js
-import myClient from './myclient/myclient.mjs'
+import myClient from "./myclient/myclient.mjs";
 
 /**  @type {import('fastify').FastifyPluginAsync<{}> */
 export default async function (app, opts) {
-  const client = await myClient({ url: 'URL' })
+  const client = await myClient({ url: "URL" });
 
-  app.post('/', async (request, reply) => {
+  app.post("/", async (request, reply) => {
     const res = await client.graphql({
-      query: 'query { movies { title } }'
-    })
-    return res
-  })
+      query: "query { movies { title } }",
+    });
+    return res;
+  });
 }
 ```
 
@@ -80,15 +80,15 @@ export default async function (app, opts) {
 Use the client in Typescript application, by calling an OpenAPI endpoint:
 
 ```ts
-import { type FastifyInstance } from 'fastify'
-import myClient from './myclient/myclient.mjs'
+import { type FastifyInstance } from "fastify";
+import myClient from "./myclient/myclient.mjs";
 
 export default async function (app: FastifyInstance) {
-  const client = await myClient({ url: 'URL' })
+  const client = await myClient({ url: "URL" });
 
-  app.get('/', async (request, reply) => {
-    return client.get({})
-  })
+  app.get("/", async (request, reply) => {
+    return client.get({});
+  });
 }
 ```
 
@@ -130,7 +130,7 @@ $ npx wattpm inject movies -p /documentation/json > openapi.json
 Now you can generate a client
 
 ```bash
-$ npx --package @platformatic/client-cli plt-client --name movies -f web/main/movies openapi.json
+$ npx --package massimo-cli plt-client --name movies -f web/main/movies openapi.json
 ```
 
 This will create the client in the `web/main/movies` folder.
@@ -138,17 +138,17 @@ This will create the client in the `web/main/movies` folder.
 Now you can modify your `web/main/routes/root.js` file to add another route to use the new client:
 
 ```js
-import myClient from './movies/movies.mjs'
+import myClient from "./movies/movies.mjs";
 
 export default async function (fastify, opts) {
-  fastify.get('/example', async (request, reply) => {
-    return { hello: fastify.example }
-  })
+  fastify.get("/example", async (request, reply) => {
+    return { hello: fastify.example };
+  });
 
-  fastify.get('/movies', async (request, reply) => {
-    const movies = await myClient.getMovies()
-    return movies
-  })
+  fastify.get("/movies", async (request, reply) => {
+    const movies = await myClient.getMovies();
+    return movies;
+  });
 }
 ```
 
@@ -165,7 +165,7 @@ Types for the client are automatically generated for both OpenAPI and GraphQL sc
 ### Example
 
 ```bash
-$ npx --package @platformatic/client-cli plt-client http://example.com/to/schema/file --name myclient --types-only
+$ npx --package massimo-cli plt-client http://example.com/to/schema/file --name myclient --types-only
 ```
 
 This will create the single `myclient.d.ts` file.
@@ -272,29 +272,29 @@ it accordingly.
 ## Use the Fastify plugin
 
 ```js
-const fastify = require('fastify')()
-const pltClient = require('@platformatic/client/fastify-plugin')
+const fastify = require("fastify")();
+const pltClient = require("massimo/fastify-plugin");
 
-fastify.register(pltClient, { url: 'http://example.com' })
+fastify.register(pltClient, { url: "http://example.com", type: "graphql" });
 
 // GraphQL
-fastify.post('/', async (request, reply) => {
+fastify.post("/", async (request, reply) => {
   const res = await request.movies.graphql({
-    query: 'mutation { saveMovie(input: { title: "foo" }) { id, title } }'
-  })
-  return res
-})
+    query: 'mutation { saveMovie(input: { title: "foo" }) { id, title } }',
+  });
+  return res;
+});
 
-// OpenAPI
-fastify.post('/', async (request, reply) => {
-  const res = await request.movies.createMovie({ title: 'foo' })
-  return res
-})
+// OpenAPI (you need to register the plugin with `openapi` type)
+fastify.post("/", async (request, reply) => {
+  const res = await request.movies.createMovie({ title: "foo" });
+  return res;
+});
 
-fastify.listen({ port: 3000 })
+fastify.listen({ port: 3000 });
 ```
 
-Note that you would need to install `@platformatic/client` as a dependency.
+Note that you would need to install `massimo` as a dependency.
 
 ### Adding types information to the fastify Plugin
 
@@ -303,10 +303,10 @@ To add types information to your plugin, you can either extend the `FastifyReque
 ```ts
 import { type MoviesClient } from "./movies/movies.ts";
 import fastify, { type FastifyRequest } from "fastify";
-import pltClient from "@platformatic/client/fastify-plugin";
+import pltClient from "massimo/fastify-plugin.js";
 
 const server = fastify();
-server.register(pltClient, { url: "http://example.com" });
+server.register(pltClient, { url: "http://example.com", type: "openapi" });
 
 // Method A: extend the interface globally
 declare module "fastify" {
@@ -345,18 +345,18 @@ module.exports = async function (app, opts) {
   app.configureMyclient({
     async getHeaders(req, reply) {
       return {
-        foo: 'bar'
-      }
-    }
-  })
+        foo: "bar",
+      };
+    },
+  });
 
-  app.post('/', async (request, reply) => {
+  app.post("/", async (request, reply) => {
     const res = await request.myclient.graphql({
-      query: 'query { movies { title } }'
-    })
-    return res
-  })
-}
+      query: "query { movies { title } }",
+    });
+    return res;
+  });
+};
 ```
 
 ### Telemetry propagation
@@ -364,10 +364,10 @@ module.exports = async function (app, opts) {
 To correctly propagate telemetry information, be sure to get the client from the request object:
 
 ```js
-fastify.post('/', async (request, reply) => {
-  const res = await request.movies.createMovie({ title: 'foo' })
-  return res
-})
+fastify.post("/", async (request, reply) => {
+  const res = await request.movies.createMovie({ title: "foo" });
+  return res;
+});
 ```
 
 ## Errors in Platformatic Client

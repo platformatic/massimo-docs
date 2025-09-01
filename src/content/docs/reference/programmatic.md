@@ -10,7 +10,7 @@ It is possible to use the Massimo client without the generator.
 ### Basic Usage
 
 ```js
-import { buildOpenAPIClient } from "@platformatic/client";
+import { buildOpenAPIClient } from "massimo";
 
 const client = await buildOpenAPIClient({
   url: `https://yourapi.com/documentation/json`,
@@ -53,7 +53,7 @@ console.log(mapping);
 You can pass an asynchronous function to modify the headers for each request with the `getHeaders` option. This function will be executed before each request. Note that `headers` and `getHeaders` can work together:
 
 ```js
-import { buildOpenAPIClient } from "@platformatic/client";
+import { buildOpenAPIClient } from "massimo";
 
 const client = await buildOpenAPIClient({
   url: `https://yourapi.com/documentation/json`,
@@ -82,7 +82,7 @@ You can also pass the following properties to `buildOpenAPIClient`:
 
 ```ts
 import { Agent } from "undici";
-import { buildOpenAPIClient } from "@platformatic/client";
+import { buildOpenAPIClient } from "massimo";
 
 const client = await buildOpenAPIClient({
   url: "string", // the URL of the service to be called
@@ -104,7 +104,7 @@ const client = await buildOpenAPIClient({
 If you use Typescript, you can take advantage of the generated types file:
 
 ```ts
-import { buildOpenAPIClient } from "@platformatic/client";
+import { buildOpenAPIClient } from "massimo";
 import Client from "./client";
 //
 // interface Client {
@@ -131,7 +131,7 @@ console.log(res);
 To create a GraphQL client, use the `buildGraphQLClient` function:
 
 ```js
-import { buildGraphQLClient } from "@platformatic/client";
+import { buildGraphQLClient } from "massimo";
 
 const client = await buildGraphQLClient({
   url: `https://yourapi.com/graphql`,
