@@ -60,18 +60,18 @@ npx massimo-cli http://example.com/api --name myclient --type openapi
 Use the client in your JavaScript application, by calling a GraphQL endpoint:
 
 ```js
-import myClient from "./myclient/myclient.js";
+import myClient from './myclient/myclient.mjs'
 
 /**  @type {import('fastify').FastifyPluginAsync<{}> */
 export default async function (app, opts) {
-  const client = await myClient({ url: "URL" });
+  const client = await myClient({ url: 'URL' })
 
-  app.post("/", async (request, reply) => {
+  app.post('/', async (request, reply) => {
     const res = await client.graphql({
-      query: "query { movies { title } }",
-    });
-    return res;
-  });
+      query: 'query { movies { title } }'
+    })
+    return res
+  })
 }
 ```
 
@@ -80,15 +80,15 @@ export default async function (app, opts) {
 Use the client in Typescript application, by calling an OpenAPI endpoint:
 
 ```ts
-import { type FastifyInstance } from "fastify";
-import myClient from "./myclient/myclient.js";
+import { type FastifyInstance } from 'fastify'
+import myClient from './myclient/myclient.mjs'
 
 export default async function (app: FastifyInstance) {
-  const client = await myClient({ url: "URL" });
+  const client = await myClient({ url: 'URL' })
 
-  app.get("/", async (request, reply) => {
-    return client.get({});
-  });
+  app.get('/', async (request, reply) => {
+    return client.get({})
+  })
 }
 ```
 
@@ -138,7 +138,7 @@ This will create the client in the `web/main/movies` folder.
 Now you can modify your `web/main/routes/root.js` file to add another route to use the new client:
 
 ```js
-import myClient from './movies/movies.js'
+import myClient from './movies/movies.mjs'
 
 export default async function (fastify, opts) {
   fastify.get('/example', async (request, reply) => {
@@ -148,7 +148,7 @@ export default async function (fastify, opts) {
   fastify.get('/movies', async (request, reply) => {
     const movies = await myClient.getMovies()
     return movies
-  }
+  })
 }
 ```
 
@@ -272,26 +272,26 @@ it accordingly.
 ## Use the Fastify plugin
 
 ```js
-const fastify = require("fastify")();
-const pltClient = require("@platformatic/client/fastify-plugin");
+const fastify = require('fastify')()
+const pltClient = require('@platformatic/client/fastify-plugin')
 
-fastify.register(pltClient, { url: "http://example.com" });
+fastify.register(pltClient, { url: 'http://example.com' })
 
 // GraphQL
-fastify.post("/", async (request, reply) => {
+fastify.post('/', async (request, reply) => {
   const res = await request.movies.graphql({
-    query: 'mutation { saveMovie(input: { title: "foo" }) { id, title } }',
-  });
-  return res;
-});
+    query: 'mutation { saveMovie(input: { title: "foo" }) { id, title } }'
+  })
+  return res
+})
 
 // OpenAPI
-fastify.post("/", async (request, reply) => {
-  const res = await request.movies.createMovie({ title: "foo" });
-  return res;
-});
+fastify.post('/', async (request, reply) => {
+  const res = await request.movies.createMovie({ title: 'foo' })
+  return res
+})
 
-fastify.listen({ port: 3000 });
+fastify.listen({ port: 3000 })
 ```
 
 Note that you would need to install `@platformatic/client` as a dependency.
@@ -345,18 +345,18 @@ module.exports = async function (app, opts) {
   app.configureMyclient({
     async getHeaders(req, reply) {
       return {
-        foo: "bar",
-      };
-    },
-  });
+        foo: 'bar'
+      }
+    }
+  })
 
-  app.post("/", async (request, reply) => {
+  app.post('/', async (request, reply) => {
     const res = await request.myclient.graphql({
-      query: "query { movies { title } }",
-    });
-    return res;
-  });
-};
+      query: 'query { movies { title } }'
+    })
+    return res
+  })
+}
 ```
 
 ### Telemetry propagation
@@ -364,10 +364,10 @@ module.exports = async function (app, opts) {
 To correctly propagate telemetry information, be sure to get the client from the request object:
 
 ```js
-fastify.post("/", async (request, reply) => {
-  const res = await request.movies.createMovie({ title: "foo" });
-  return res;
-});
+fastify.post('/', async (request, reply) => {
+  const res = await request.movies.createMovie({ title: 'foo' })
+  return res
+})
 ```
 
 ## Errors in Platformatic Client
