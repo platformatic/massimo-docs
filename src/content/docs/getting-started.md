@@ -275,7 +275,7 @@ it accordingly.
 const fastify = require("fastify")();
 const pltClient = require("massimo/fastify-plugin");
 
-fastify.register(pltClient, { url: "http://example.com" });
+fastify.register(pltClient, { url: "http://example.com", type: "graphql" });
 
 // GraphQL
 fastify.post("/", async (request, reply) => {
@@ -306,7 +306,7 @@ import fastify, { type FastifyRequest } from "fastify";
 import pltClient from "massimo/fastify-plugin.js";
 
 const server = fastify();
-server.register(pltClient, { url: "http://example.com" });
+server.register(pltClient, { url: "http://example.com", type: "openapi" });
 
 // Method A: extend the interface globally
 declare module "fastify" {
