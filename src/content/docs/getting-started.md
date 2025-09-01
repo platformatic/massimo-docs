@@ -285,7 +285,7 @@ fastify.post("/", async (request, reply) => {
   return res;
 });
 
-// OpenAPI
+// OpenAPI (you need to register the plugin with `openapi` type)
 fastify.post("/", async (request, reply) => {
   const res = await request.movies.createMovie({ title: "foo" });
   return res;
