@@ -32,6 +32,7 @@ Generate a client plugin from an OpenAPI or GraphQL schema.
 | `--name <name>`                | `-n`  | Name of the client                                 | Required         |
 | `--folder <name>`              | `-f`  | Name of the plugin folder                          | Same as `--name` |
 | `--config <path>`              | `-c`  | Path to the configuration file                     | -                |
+| `--module <esm\|cjs>`          |       | Module format (ESM or CommonJS)                    | Auto-detect      |
 | `--typescript`                 | `-t`  | Generate the client plugin in TypeScript           | `false`          |
 | `--frontend`                   |       | Generate browser-compatible client using `fetch`   | `false`          |
 | `--language <js\|ts>`          |       | Language for frontend client                       | `js`             |
@@ -68,6 +69,27 @@ massimo http://example.com/graphql -n myclient
 
 ```bash
 massimo path/to/schema.json -n myclient
+```
+
+### Module Format Examples
+
+**Generate ESM client:**
+
+```bash
+massimo https://api.example.com/openapi.json --name my-api --module esm
+```
+
+**Generate CommonJS client:**
+
+```bash
+massimo https://api.example.com/openapi.json --name my-api --module cjs
+```
+
+**Auto-detect module format from package.json:**
+
+```bash
+# Detects from "type": "module" in package.json
+massimo https://api.example.com/openapi.json --name my-api
 ```
 
 ### Advanced Examples
@@ -112,6 +134,20 @@ massimo https://api.example.com/openapi.json \
   --with-credentials \
   --name my-api
 ```
+
+## Module Format Detection
+
+Massimo automatically detects your project's module format:
+
+1. **ESM (ECMAScript Modules)**: Generated when your `package.json` contains `"type": "module"`
+   - Output files use `.mjs` extension
+   - Uses `import`/`export` syntax
+
+2. **CommonJS**: Generated when `package.json` doesn't have `"type": "module"` or has `"type": "commonjs"`
+   - Output files use `.cjs` extension
+   - Uses `require`/`module.exports` syntax
+
+3. **Override**: Use `--module esm` or `--module cjs` to force a specific format
 
 ## See Also
 

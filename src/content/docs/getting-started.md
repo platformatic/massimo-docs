@@ -38,6 +38,7 @@ This command will:
 1. Download the OpenAPI specification
 2. Generate a typed client in the `./myclient` directory
 3. Create TypeScript type definitions
+4. Automatically detect module format (ESM or CommonJS) from your `package.json`
 
 ### GraphQL Client
 
@@ -55,9 +56,23 @@ If an API supports both OpenAPI and GraphQL, you can specify which client to gen
 npx massimo-cli http://example.com/api --name myclient --type openapi
 ```
 
+### Module Format (ESM vs CommonJS)
+
+Massimo automatically detects your project's module format from `package.json`. You can also explicitly specify the format:
+
+```bash
+# Generate ESM module (default for projects with "type": "module")
+npx massimo-cli http://example.com/openapi.json --name myclient --module esm
+
+# Generate CommonJS module (default for projects without "type": "module")
+npx massimo-cli http://example.com/openapi.json --name myclient --module cjs
+```
+
 ### Example Usage in JavaScript (GraphQL)
 
-Use the client in your JavaScript application, by calling a GraphQL endpoint:
+#### ESM (ECMAScript Module)
+
+Use the client in your JavaScript application with ESM syntax:
 
 ```js
 import myClient from "./myclient/myclient.mjs";
@@ -75,15 +90,54 @@ export default async function (app, opts) {
 }
 ```
 
+#### CommonJS
+
+Use the client with CommonJS syntax:
+
+```js
+const myClient = require("./myclient/myclient.cjs");
+
+/**  @type {import('fastify').FastifyPluginAsync<{}> */
+module.exports = async function (app, opts) {
+  const client = await myClient({ url: "URL" });
+
+  app.post("/", async (request, reply) => {
+    const res = await client.graphql({
+      query: "query { movies { title } }",
+    });
+    return res;
+  });
+}
+```
+
 ### Example Usage in TypeScript (OpenAPI)
 
-Use the client in Typescript application, by calling an OpenAPI endpoint:
+#### ESM (ECMAScript Module)
+
+Use the client in TypeScript application with ESM syntax:
 
 ```ts
 import { type FastifyInstance } from "fastify";
 import myClient from "./myclient/myclient.mjs";
 
 export default async function (app: FastifyInstance) {
+  const client = await myClient({ url: "URL" });
+
+  app.get("/", async (request, reply) => {
+    return client.get({});
+  });
+}
+```
+
+#### CommonJS with TypeScript
+
+For CommonJS projects using TypeScript:
+
+```ts
+import { type FastifyInstance } from "fastify";
+const myClient = require("./myclient/myclient.cjs");
+
+export = async function (app: FastifyInstance) {
   const client = await myClient({ url: "URL" });
 
   app.get("/", async (request, reply) => {
@@ -271,6 +325,34 @@ it accordingly.
 
 ## Use the Fastify plugin
 
+### ESM (ECMAScript Module)
+
+```js
+import fastify from "fastify";
+import pltClient from "massimo/fastify-plugin";
+
+const server = fastify();
+server.register(pltClient, { url: "http://example.com", type: "graphql" });
+
+// GraphQL
+server.post("/", async (request, reply) => {
+  const res = await request.movies.graphql({
+    query: 'mutation { saveMovie(input: { title: "foo" }) { id, title } }',
+  });
+  return res;
+});
+
+// OpenAPI (you need to register the plugin with `openapi` type)
+server.post("/", async (request, reply) => {
+  const res = await request.movies.createMovie({ title: "foo" });
+  return res;
+});
+
+server.listen({ port: 3000 });
+```
+
+### CommonJS
+
 ```js
 const fastify = require("fastify")();
 const pltClient = require("massimo/fastify-plugin");
@@ -301,9 +383,9 @@ Note that you would need to install `massimo` as a dependency.
 To add types information to your plugin, you can either extend the `FastifyRequest` interface globally or locally.
 
 ```ts
-import { type MoviesClient } from "./movies/movies.ts";
-import fastify, { type FastifyRequest } from "fastify";
-import pltClient from "massimo/fastify-plugin.js";
+import { type MoviesClient } from "./movies/movies";
+import fastify, { type FastifyRequest, type FastifyReply } from "fastify";
+import pltClient from "massimo/fastify-plugin";
 
 const server = fastify();
 server.register(pltClient, { url: "http://example.com", type: "openapi" });
