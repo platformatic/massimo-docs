@@ -65,27 +65,29 @@ Massimo generates optimized clients for different environments:
 Generate a typed client for your API in seconds:
 
 ```bash
-# For OpenAPI
+# For OpenAPI (auto-detects ESM/CommonJS from package.json)
 npx massimo-cli http://api.example.com/openapi.json --name my-client
 
-# For GraphQL  
-npx massimo-cli http://api.example.com/graphql --name my-client --type graphql
+# For GraphQL with explicit module format
+npx massimo-cli http://api.example.com/graphql --name my-client --type graphql --module esm
 ```
 
 Then use it in your code:
 
+### ESM (ECMAScript Module)
 ```js
 import client from './my-client/my-client.mjs'
 
 const api = await client({ url: 'http://api.example.com' })
 const result = await api.getUsers()
 ```
-
 ## Features
 
 - **OpenAPI & GraphQL Support** - Generate clients from OpenAPI 3.0+ specs or GraphQL schemas
 - **TypeScript Types** - Full type safety with automatically generated TypeScript definitions
+- **Module Format Support** - Automatic detection and generation of ESM or CommonJS modules
 - **Dual Runtime Support** - Optimized clients for both Node.js (Undici) and browsers (Fetch)
 - **Authentication** - Built-in support for custom headers and authentication strategies
 - **Fastify Integration** - First-class Fastify plugin for seamless server integration
 - **Error Handling** - Comprehensive error types and response validation
+

@@ -9,6 +9,8 @@ It is possible to use the Massimo client without the generator.
 
 ### Basic Usage
 
+#### ESM (ECMAScript Module)
+
 ```js
 import { buildOpenAPIClient } from "massimo";
 
@@ -23,6 +25,26 @@ const client = await buildOpenAPIClient({
 const res = await client.yourOperationName({ foo: "bar" });
 
 console.log(res);
+```
+
+#### CommonJS
+
+```js
+const { buildOpenAPIClient } = require("massimo");
+
+(async () => {
+  const client = await buildOpenAPIClient({
+    url: `https://yourapi.com/documentation/json`,
+    // path: 'path/to/openapi.json',
+    headers: {
+      foo: "bar",
+    },
+  });
+
+  const res = await client.yourOperationName({ foo: "bar" });
+
+  console.log(res);
+})();
 ```
 
 ### Accessing Operation Mapping
@@ -52,6 +74,8 @@ console.log(mapping);
 
 You can pass an asynchronous function to modify the headers for each request with the `getHeaders` option. This function will be executed before each request. Note that `headers` and `getHeaders` can work together:
 
+### ESM Example
+
 ```js
 import { buildOpenAPIClient } from "massimo";
 
@@ -74,6 +98,34 @@ const client = await buildOpenAPIClient({
 const res = await client.yourOperationName({ foo: "bar" });
 
 console.log(res);
+```
+
+### CommonJS Example
+
+```js
+const { buildOpenAPIClient } = require("massimo");
+
+(async () => {
+  const client = await buildOpenAPIClient({
+    url: `https://yourapi.com/documentation/json`,
+    headers: {
+      foo: "bar",
+    },
+    getHeaders(options) {
+      const { url, method, body, headers, telemetryHeaders } = options;
+
+      // generate your dynamic headers
+
+      return {
+        myDynamicHeader: "my-value",
+      };
+    },
+  });
+
+  const res = await client.yourOperationName({ foo: "bar" });
+
+  console.log(res);
+})();
 ```
 
 ## Optional properties
@@ -130,6 +182,8 @@ console.log(res);
 
 To create a GraphQL client, use the `buildGraphQLClient` function:
 
+### ESM Example
+
 ```js
 import { buildGraphQLClient } from "massimo";
 
@@ -155,4 +209,35 @@ const res = await client.graphql({
 });
 
 console.log(res);
+```
+
+### CommonJS Example
+
+```js
+const { buildGraphQLClient } = require("massimo");
+
+(async () => {
+  const client = await buildGraphQLClient({
+    url: `https://yourapi.com/graphql`,
+    headers: {
+      foo: "bar",
+    },
+  });
+
+  const res = await client.graphql({
+    query: `
+      mutation createMovie($title: String!) {
+        saveMovie(input: {title: $title}) {
+          id
+          title
+        }
+      }
+    `,
+    variables: {
+      title: "The Matrix",
+    },
+  });
+
+  console.log(res);
+})();
 ```
