@@ -224,6 +224,26 @@ $ npx --package massimo-cli plt-client http://example.com/to/schema/file --name 
 
 This will create the single `myclient.d.ts` file.
 
+### TypeScript Declaration File Extensions
+
+With the `--type-extension` flag, Massimo generates module-specific TypeScript declaration files:
+
+```bash
+# Generate .d.mts for ESM modules
+$ npx --package massimo-cli plt-client http://example.com/to/schema/file --name myclient --types-only --type-extension --module esm
+
+# Generate .d.cts for CommonJS modules
+$ npx --package massimo-cli plt-client http://example.com/to/schema/file --name myclient --types-only --type-extension --module cjs
+
+# Auto-detect module format and generate appropriate extension
+$ npx --package massimo-cli plt-client http://example.com/to/schema/file --name myclient --types-only --type-extension
+```
+
+When `--type-extension` is used:
+- ESM modules generate `.d.mts` files
+- CommonJS modules generate `.d.cts` files
+- Module format is auto-detected from package.json or can be explicitly set with `--module`
+
 ### OpenAPI Types
 
 We provide a fully typed experience for OpenAPI, typing both the request and response for

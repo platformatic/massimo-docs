@@ -44,6 +44,7 @@ Generate a client plugin from an OpenAPI or GraphQL schema.
 | `--url-auth-headers <headers>` |       | Auth headers for schema URL (JSON string)          | -                |
 | `--types-only`                 |       | Generate only TypeScript types                     | `false`          |
 | `--types-comment`              |       | Add comment to generated `.d.ts` file              | `false`          |
+| `--type-extension`             |       | Force TypeScript declaration file extensions       | `false`          |
 | `--with-credentials`           |       | Add `credentials: 'include'` to fetch requests     | `false`          |
 | `--props-optional`             |       | Define properties as optional unless required      | `true`           |
 | `--skip-config-update`         |       | Skip updating Platformatic/Watt config             | `true`           |
@@ -112,6 +113,13 @@ massimo https://api.example.com/openapi.json --frontend --language ts --name my-
 massimo https://api.example.com/openapi.json --types-only --name my-api
 ```
 
+**Force TypeScript declaration file extensions:**
+
+```bash
+# Generate .d.mts for ESM or .d.cts for CommonJS based on module format
+massimo https://api.example.com/openapi.json --types-only --type-extension --name my-api
+```
+
 **Full response/request objects:**
 
 ```bash
@@ -148,6 +156,42 @@ Massimo automatically detects your project's module format:
    - Uses `require`/`module.exports` syntax
 
 3. **Override**: Use `--module esm` or `--module cjs` to force a specific format
+
+## TypeScript Declaration File Extensions
+
+When generating TypeScript declaration files, Massimo can intelligently determine the appropriate file extension:
+
+### Default Behavior
+
+- TypeScript declaration files are generated with the `.d.ts` extension by default
+
+### With `--type-extension` Flag
+
+When you use the `--type-extension` flag, Massimo generates module-specific TypeScript declaration files:
+
+1. **ESM Projects**: Generates `.d.mts` files (TypeScript declaration for ESM modules)
+2. **CommonJS Projects**: Generates `.d.cts` files (TypeScript declaration for CommonJS modules)
+
+### Extension Determination Rules
+
+The TypeScript declaration file extension is determined by the following precedence:
+
+1. **Explicit `--type-extension` flag**: Forces generation of module-specific extensions
+2. **Module format**: Based on `--module` flag or detected module type from package.json
+3. **Parent package.json**: Falls back to the `"type"` field in the parent package.json
+
+### Examples
+
+```bash
+# Generate .d.mts for ESM project
+massimo https://api.example.com/openapi.json --types-only --type-extension --module esm --name my-api
+
+# Generate .d.cts for CommonJS project  
+massimo https://api.example.com/openapi.json --types-only --type-extension --module cjs --name my-api
+
+# Auto-detect and generate appropriate extension
+massimo https://api.example.com/openapi.json --types-only --type-extension --name my-api
+```
 
 ## See Also
 
